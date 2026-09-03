@@ -1,15 +1,15 @@
 export const site = {
   /** Uppercase wordmark used in the nav, hero eyebrow and footer. */
-  wordmark: "GRAVIFY",
+  wordmark: "GRAVITO",
   /** Cased brand name used inside sentences. */
-  name: "Gravify",
+  name: "Gravito",
   secondary: "The liquidity gravity layer for Robinhood Chain.",
   tagline: "Pull assets in. Verify the backing. Put capital to work.",
   description:
     "The liquidity gravity layer for Robinhood Chain. Pull assets in. Verify the backing. Put capital to work.",
-  url: "https://www.gravify.xyz",
-  xHandle: "@GravifyRH",
-  xUrl: "https://x.com/GravifyRH",
+  url: "https://www.gravito.xyz",
+  xHandle: "@GravitoRH",
+  xUrl: "https://x.com/GravitoRH",
 } as const;
 
 /**

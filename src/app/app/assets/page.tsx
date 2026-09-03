@@ -6,6 +6,7 @@ import { useLiquidity } from "@/components/LiquidityTable";
 import { Badge, Skeleton } from "@/components/ui/Marks";
 import { chains } from "@/lib/chain";
 import { supportedAssets } from "@/lib/assets";
+import { site } from "@/lib/site";
 import {
   formatAmount,
   formatBacking,
@@ -44,7 +45,7 @@ export default function AssetsPage() {
   return (
     <>
       <PageHeader kicker="Assets" title="Supported assets">
-        The registry lists every asset {`Gravify`} is built to carry. Locked, minted and
+        The registry lists every asset {site.name} is built to carry. Locked, minted and
         backing figures are live reads; a row without deployed contracts shows exactly
         that.
       </PageHeader>

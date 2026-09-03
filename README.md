@@ -1,9 +1,9 @@
-# GRAVIFY
+# GRAVITO
 
 **Capital has gravity.** The liquidity gravity layer for Robinhood Chain — pull assets
 in, verify the backing, put capital to work.
 
-A rebuild of gravfi.xyz — every page, not just the landing — renamed to GRAVIFY.
+A rebuild of gravfi.xyz — every page, not just the landing — renamed to GRAVITO.
 Layout, copy, palette, type scale, animation timings and the on-chain reads are
 reproduced 1:1; only the brand strings changed.
 
@@ -76,10 +76,10 @@ Four strings still point at the original project. They are all in
    there so the token card demonstrates a live read. Deploy your own $GRAV and set
    `NEXT_PUBLIC_GRAV_TOKEN_ADDRESS`. Publishing someone else's address as "the official
    $GRAV" is exactly the failure the card exists to prevent.
-2. **`site.xHandle` / `site.xUrl`** — `@GravifyRH` is a placeholder. The whole point of
+2. **`site.xHandle` / `site.xUrl`** — `@GravitoRH` is a placeholder. The whole point of
    the token section is that the address matches in both places; register the account or
    point these at the real one.
-3. **`site.url`** — `https://www.gravify.xyz`, used for OG image URLs and canonical links.
+3. **`site.url`** — `https://www.gravito.xyz`, used for OG image URLs and canonical links.
 4. **`NEXT_PUBLIC_SWAP_ROUTER`** — defaults to the router the original site uses. Swap it
    for yours, or leave it unset and the interface will read "router not configured".
 

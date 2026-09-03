@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { cx } from "@/lib/cx";
 import { site } from "@/lib/site";
 
-/** The Gravify mark: two chevrons falling toward the same point. */
+/** The Gravito mark: two chevrons falling toward the same point. */
 export function Logo({ className = "" }: { className?: string }) {
   return (
     <svg
