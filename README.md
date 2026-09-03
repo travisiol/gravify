@@ -62,6 +62,11 @@ identical to gravfi.xyz — 583 tags, same classes, same order. The only differe
 tree is the hamburger icon, which lucide-react draws with `<path>` in this version and `<line>`
 in the one the original shipped. Same geometry, same pixels.
 
+One deliberate divergence: the original's header is wider than a 1024px viewport, so the whole
+page scrolls sideways on a standard laptop. Between `lg` and `xl` the nav here uses a tighter
+gap and drops the standalone X button — the handle is still in the hero and the footer. At
+`xl` and above nothing moves: same gap, same buttons, same computed values as the source.
+
 The liquidity engine reads the oldest 40 and newest 40 pairs the factory has ever
 created, plus any gToken pool and the canonical WETH/USDG pool, all pinned to a single
 block so the table is one consistent view. TVL is quoted in USDG; volume is omitted

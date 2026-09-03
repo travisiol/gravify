@@ -58,7 +58,7 @@ export function Navbar() {
           <Wordmark />
         </Link>
 
-        <nav className="hidden items-center gap-8 lg:flex">
+        <nav className="hidden items-center gap-5 lg:flex xl:gap-8">
           {links.map((l) => (
             <Link
               key={l.href}
@@ -76,7 +76,7 @@ export function Navbar() {
             target="_blank"
             rel="noreferrer"
             aria-label={`${site.name} on X`}
-            className="flex h-10 w-10 items-center justify-center rounded-sm border border-line bg-white text-ink hover:border-ink/40"
+            className="hidden h-10 w-10 items-center justify-center rounded-sm border border-line bg-white text-ink hover:border-ink/40 xl:flex"
           >
             <XIcon />
           </a>
