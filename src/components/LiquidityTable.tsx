@@ -5,9 +5,9 @@ import { Address } from "./ui/Address";
 import { Button } from "./ui/Button";
 import { Badge, Skeleton } from "./ui/Marks";
 import { addressExplorerUrl } from "@/lib/chain";
+import { formatUnitsFixed } from "@/lib/format";
 import {
   emptySnapshot,
-  formatUnitsFixed,
   readLiquidity,
   type LiquiditySnapshot,
   type Pool,

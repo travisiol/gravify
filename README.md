@@ -57,6 +57,11 @@ The marketing pages (`/`, `/docs/*`) carry the navbar and footer; everything und
 | History | gToken `Transfer` logs for the connected wallet — a mint from zero is a wrap |
 | Deploy gas estimate | `eth_gasPrice` on both chains |
 
+Verified against the source: the landing page's server-rendered markup is element-for-element
+identical to gravfi.xyz — 583 tags, same classes, same order. The only difference in the whole
+tree is the hamburger icon, which lucide-react draws with `<path>` in this version and `<line>`
+in the one the original shipped. Same geometry, same pixels.
+
 The liquidity engine reads the oldest 40 and newest 40 pairs the factory has ever
 created, plus any gToken pool and the canonical WETH/USDG pool, all pinned to a single
 block so the table is one consistent view. TVL is quoted in USDG; volume is omitted
@@ -107,6 +112,7 @@ src/
     contracts     the 15-slot contract registry
     assets        the asset registry
     deployPlan    the 14 steps that bring one asset up
+    format        truncation and fixed-decimal amounts
 ```
 
 ### The hero

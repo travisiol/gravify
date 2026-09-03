@@ -6,13 +6,8 @@ import { Blank, Fact, PageHeader, Panel } from "@/components/app/Shell";
 import { Address } from "@/components/ui/Address";
 import { Button } from "@/components/ui/Button";
 import { cx } from "@/lib/cx";
-import {
-  addressExplorerUrl,
-  CANONICAL_TOKENS,
-  chains,
-  SWAP_ROUTER,
-} from "@/lib/chain";
-import { formatUnitsFixed } from "@/lib/liquidity";
+import { addressExplorerUrl, CANONICAL_TOKENS, chains } from "@/lib/chain";
+import { formatUnitsFixed } from "@/lib/format";
 import { NoRouteError, quoteSwap, readToken, type Quote, type TokenInfo } from "@/lib/swap";
 import { useWallet } from "@/lib/useWallet";
 
@@ -158,9 +153,12 @@ export default function SwapPage() {
               </span>
             </Fact>
             <Fact label="Router" className="pr-4">
+              {/* The router is named by the quote, not by configuration. */}
               <Address
-                address={SWAP_ROUTER || undefined}
-                href={SWAP_ROUTER ? addressExplorerUrl(SWAP_ROUTER) : undefined}
+                address={quotable && quote ? quote.routerAddress : undefined}
+                href={
+                  quotable && quote ? addressExplorerUrl(quote.routerAddress) : undefined
+                }
               />
             </Fact>
           </dl>
@@ -191,15 +189,30 @@ export default function SwapPage() {
             <ol className="flex flex-col divide-y divide-line">
               {quote.route.map((hop, i) => (
                 <li key={hop.pair} className="py-3">
-                  <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-muted">
-                    Hop {i + 1} · 0.30%
+                  <div className="flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.18em] text-ink-muted">
+                    <span>
+                      Hop {i + 1} · {hop.tokenIn.symbol} → {hop.tokenOut.symbol}
+                    </span>
+                    <span>0.30%</span>
                   </div>
                   <div className="mt-1">
                     <Address address={hop.pair} href={addressExplorerUrl(hop.pair)} />
                   </div>
-                  <div className="mt-1 font-mono text-[11px] text-ink-muted">
-                    reserves {hop.reserveIn.toString()} → {hop.reserveOut.toString()}
-                  </div>
+                  <dl className="mt-2 flex flex-col gap-1 font-mono text-[11px]">
+                    <Fact label="Reserves">
+                      {formatUnitsFixed(hop.reserveIn, hop.tokenIn.decimals, 4)}{" "}
+                      {hop.tokenIn.symbol} /{" "}
+                      {formatUnitsFixed(hop.reserveOut, hop.tokenOut.decimals, 4)}{" "}
+                      {hop.tokenOut.symbol}
+                    </Fact>
+                    <Fact label="Through this pool">
+                      {formatUnitsFixed(hop.amountIn, hop.tokenIn.decimals, 4)}{" "}
+                      {hop.tokenIn.symbol} →{" "}
+                      {formatUnitsFixed(hop.amountOut, hop.tokenOut.decimals, 4)}{" "}
+                      {hop.tokenOut.symbol}
+                    </Fact>
+                    <Fact label="Impact">{(hop.impactBps / 100).toFixed(2)}%</Fact>
+                  </dl>
                 </li>
               ))}
             </ol>

@@ -293,12 +293,3 @@ export async function readLiquidity(): Promise<LiquiditySnapshot> {
     ],
   };
 }
-
-export function formatUnitsFixed(value: bigint, decimals: number, dp: number) {
-  const base = 10n ** BigInt(decimals);
-  const whole = value / base;
-  const frac = value % base;
-  const fracStr = frac.toString().padStart(decimals, "0").slice(0, dp);
-  const head = whole.toLocaleString("en-US");
-  return dp > 0 ? `${head}.${fracStr}` : head;
-}

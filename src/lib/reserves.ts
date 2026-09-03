@@ -1,6 +1,7 @@
 import { erc20Abi, parseAbi } from "viem";
 import { ethClient, robinhoodClient, chains } from "./chain";
 import { supportedAssets, type SupportedAsset } from "./assets";
+import { formatUnitsFixed } from "./format";
 import type { Tone } from "@/components/ui/Marks";
 
 const vaultAbi = parseAbi(["function totalLocked() view returns (uint256)"]);
@@ -171,14 +172,9 @@ export function readAllReserves() {
   return Promise.all(supportedAssets.map(readReserve));
 }
 
-/** Formats a token amount with a fixed number of decimal places. */
-export function formatAmount(value: bigint, decimals: number, dp = 2) {
-  const base = 10n ** BigInt(decimals);
-  const whole = (value / base).toLocaleString("en-US");
-  if (dp === 0) return whole;
-  const frac = (value % base).toString().padStart(decimals, "0").slice(0, dp);
-  return `${whole}.${frac}`;
-}
+/** A token amount, rendered for a reserve figure. */
+export const formatAmount = (value: bigint, decimals: number, dp = 2) =>
+  formatUnitsFixed(value, decimals, dp);
 
 export function formatBacking(bps: bigint) {
   return `${(Number(bps) / 100).toFixed(2)}%`;

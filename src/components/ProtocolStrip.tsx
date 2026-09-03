@@ -5,10 +5,21 @@ import { Skeleton } from "./ui/Marks";
 import { chains } from "@/lib/chain";
 import { supportedAssets, deployedAssetCount } from "@/lib/assets";
 import { formatAge, formatBlock, useChainStatus } from "@/lib/useChainStatus";
+import { useReserves } from "@/lib/useReserves";
 
 /** Five numbers, read live, directly under the fold. */
 export function ProtocolStrip() {
   const { robinhood, ethereum, now } = useChainStatus();
+  const { reports, pending } = useReserves();
+
+  // How many of the deployed assets came back fully backed.
+  const verified = reports
+    ? reports.filter((r) => r.status === "FULLY_BACKED").length
+    : null;
+  const flagged = reports
+    ? reports.filter((r) => r.status === "WATCH" || r.status === "UNDERCOLLATERALIZED")
+        .length
+    : 0;
 
   const cells: { label: string; value: ReactNode; sub?: ReactNode }[] = [
     {
@@ -35,8 +46,19 @@ export function ProtocolStrip() {
     },
     {
       label: "Reserves",
-      value: deployedAssetCount === 0 ? "—" : <Skeleton className="h-6 w-20" />,
-      sub: "awaiting deployment",
+      value: pending ? (
+        <Skeleton className="h-6 w-20" />
+      ) : deployedAssetCount === 0 ? (
+        "—"
+      ) : (
+        `${verified ?? 0} verified`
+      ),
+      sub:
+        deployedAssetCount === 0
+          ? "awaiting deployment"
+          : flagged
+            ? `${flagged} flagged`
+            : "none flagged",
     },
   ];
 

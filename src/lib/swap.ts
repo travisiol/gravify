@@ -23,10 +23,14 @@ export type TokenInfo = {
 
 export type Hop = {
   pair: `0x${string}`;
-  tokenIn: `0x${string}`;
-  tokenOut: `0x${string}`;
+  tokenIn: TokenInfo;
+  tokenOut: TokenInfo;
   reserveIn: bigint;
   reserveOut: bigint;
+  amountIn: bigint;
+  amountOut: bigint;
+  /** How much of the total slippage this pool alone contributes. */
+  impactBps: number;
 };
 
 export type Quote = {
@@ -36,6 +40,8 @@ export type Quote = {
   priceImpactBps: number;
   path: `0x${string}`[];
   route: Hop[];
+  /** The router this quote was priced against. */
+  routerAddress: `0x${string}`;
   blockNumber: bigint;
   quotedAt: number;
 };
@@ -114,6 +120,20 @@ export async function quoteSwap(
   }
   if (!best) throw new NoRouteError();
 
+  // Name every token on the path, so the inspector can show units not wei.
+  const named = new Map<string, TokenInfo>();
+  for (const t of [tokenIn, tokenOut, ...CANONICAL_TOKENS]) {
+    named.set(t.address.toLowerCase(), {
+      address: t.address,
+      symbol: t.symbol,
+      decimals: t.decimals,
+    });
+  }
+  const unknown = best.path.filter((a) => !named.has(a.toLowerCase()));
+  for (const address of unknown) {
+    named.set(address.toLowerCase(), await readToken(address));
+  }
+
   // Read the pools the route actually touches, for the impact figure.
   const route: Hop[] = [];
   for (let i = 0; i < best.path.length - 1; i++) {
@@ -137,12 +157,25 @@ export async function quoteSwap(
     });
     const [r0, r1] = reserves as readonly [bigint, bigint, number];
     const aIsToken0 = (token0 as string).toLowerCase() === a.toLowerCase();
+    const reserveIn = aIsToken0 ? r0 : r1;
+    const reserveOut = aIsToken0 ? r1 : r0;
+    const hopIn = best.amounts[i];
+    const hopOut = best.amounts[i + 1];
+
+    // What this pool would have paid at its mid-price, versus what it pays.
+    const midOut = reserveIn === 0n ? 0n : (hopIn * reserveOut) / reserveIn;
+    const impactBps =
+      midOut === 0n ? 0 : Number(((midOut - hopOut) * 10000n) / midOut);
+
     route.push({
       pair,
-      tokenIn: a,
-      tokenOut: b,
-      reserveIn: aIsToken0 ? r0 : r1,
-      reserveOut: aIsToken0 ? r1 : r0,
+      tokenIn: named.get(a.toLowerCase())!,
+      tokenOut: named.get(b.toLowerCase())!,
+      reserveIn,
+      reserveOut,
+      amountIn: hopIn,
+      amountOut: hopOut,
+      impactBps: Math.max(0, impactBps),
     });
   }
 
@@ -166,6 +199,7 @@ export async function quoteSwap(
     priceImpactBps: Math.max(0, priceImpactBps),
     path: best.path,
     route,
+    routerAddress: SWAP_ROUTER,
     blockNumber,
     quotedAt: Date.now(),
   };
