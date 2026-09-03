@@ -6,7 +6,8 @@ import { CityCanvas } from "./CityCanvas";
 import { ChainPill } from "./ChainPill";
 import { Button } from "./ui/Button";
 import { XIcon } from "./ui/Marks";
-import { chains, MESSENGER, SWAP_ROUTER } from "@/lib/chain";
+import { chains, SWAP_ROUTER } from "@/lib/chain";
+import { MESSENGER_DESTINATION } from "@/lib/contracts";
 import { site } from "@/lib/site";
 
 const HEADLINE = ["CAPITAL", "HAS", "GRAVITY."];
@@ -102,7 +103,9 @@ export function Hero() {
               <Fact
                 label="Bridge"
                 value={
-                  MESSENGER ? `${MESSENGER} · trusted relayer` : "messenger not configured"
+                  MESSENGER_DESTINATION
+                    ? "GravRelayMessenger · trusted relayer"
+                    : "messenger not configured"
                 }
               />
               <Fact

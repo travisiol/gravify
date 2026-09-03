@@ -37,7 +37,8 @@ export function Button({
 }: Props) {
   const cls = cx(base, variants[variant], sizes[size], className);
 
-  if (href) {
+  // A link with nowhere to go is a disabled button, not a dead anchor.
+  if (href && !rest.disabled) {
     const external = href.startsWith("http");
     if (external) {
       return (

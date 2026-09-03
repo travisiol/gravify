@@ -1,7 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
 import { site } from "@/lib/site";
 import "./globals.css";
 
@@ -40,11 +38,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${sans.variable} ${mono.variable}`}>
-      <body className="min-h-screen font-sans">
-        <Navbar />
-        {children}
-        <Footer />
-      </body>
+      <body className="min-h-screen font-sans">{children}</body>
     </html>
   );
 }

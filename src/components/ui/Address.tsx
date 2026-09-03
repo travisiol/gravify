@@ -3,10 +3,9 @@
 import { Check, Copy, ExternalLink } from "lucide-react";
 import { useState } from "react";
 import { cx } from "@/lib/cx";
+import { truncate } from "@/lib/format";
 
-export function truncate(address: string, chars = 4) {
-  return `${address.slice(0, chars + 2)}…${address.slice(-chars)}`;
-}
+
 
 export function CopyButton({
   value,

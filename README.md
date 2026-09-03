@@ -3,9 +3,9 @@
 **Capital has gravity.** The liquidity gravity layer for Robinhood Chain — pull assets
 in, verify the backing, put capital to work.
 
-A rebuild of the gravfi.xyz landing page, renamed to GRAVIFY. Layout, copy, palette,
-type scale, animation timings and the on-chain reads are reproduced 1:1; only the brand
-strings changed.
+A rebuild of gravfi.xyz — every page, not just the landing — renamed to GRAVIFY.
+Layout, copy, palette, type scale, animation timings and the on-chain reads are
+reproduced 1:1; only the brand strings changed.
 
 ---
 
@@ -22,6 +22,29 @@ npm run dev
 The page reads live data on load — no fixtures, no simulated numbers. If the RPCs are
 unreachable the interface says so rather than inventing a figure.
 
+## Pages
+
+Thirteen routes, matching the original exactly.
+
+| Route | What it is |
+| --- | --- |
+| `/` | The landing page: hero flythrough, live protocol strip, nine sections |
+| `/app` | Finance status — every switch, and whether it is actually on |
+| `/app/bridge` | Wrap and unwrap, with the transaction lifecycle |
+| `/app/swap` | Router-quoted swaps and the route inspector |
+| `/app/router` | Gravity Router: the bridge leg and the swap leg as one plan |
+| `/app/reserves` | Proof of Gravity plus the per-asset read inspector |
+| `/app/assets` | The registry as a table of live figures |
+| `/app/assets/[symbol]` | One asset: backing, contracts, and where to act on it |
+| `/app/liquidity` | The full pool explorer |
+| `/app/history` | A wallet's wraps, unwraps and swaps, from chain logs |
+| `/app/deploy` | The 14-step operator checklist, with live gas prices |
+| `/docs` | The finance documentation |
+| `/docs/contracts` | The contract registry and its ABIs |
+
+The marketing pages (`/`, `/docs/*`) carry the navbar and footer; everything under
+`/app` uses its own shell — chain-status bar, section rail, no marketing chrome.
+
 ## What is actually live
 
 | Surface | Source |
@@ -29,7 +52,10 @@ unreachable the interface says so rather than inventing a figure.
 | Block heights (both chains) | `eth_getBlockByNumber` on Ethereum + Robinhood Chain, every 12s |
 | $GRAV symbol / decimals / supply | ERC-20 reads on the token contract, every 60s |
 | Liquidity table | Router → factory → `allPairs`, reserves + token metadata read at one pinned block, every 30s |
-| Reserves, assets, registry | Static: nothing is deployed, so every row says so |
+| Swap quotes | `getAmountsOut` on the router, direct pair then two-hop via WETH; impact from pool reserves |
+| Reserve reports | `balanceOf(vault)` + `totalLocked()` against `totalSupply()`, pinned per chain, every 30s |
+| History | gToken `Transfer` logs for the connected wallet — a mint from zero is a wrap |
+| Deploy gas estimate | `eth_gasPrice` on both chains |
 
 The liquidity engine reads the oldest 40 and newest 40 pairs the factory has ever
 created, plus any gToken pool and the canonical WETH/USDG pool, all pinned to a single
@@ -60,18 +86,27 @@ gate drives the "0 / 5" counter, the "not deployed" badges and the reserve cards
 
 ```
 src/
-  app/            layout, page, favicon + OG image (generated, no binary assets)
+  app/            layout, favicon + OG image (generated, no binary assets)
+    (site)/       landing + docs, wrapped in the marketing chrome
+    app/          the application shell and its nine pages
   components/
     CityCanvas    the hero: a 3D street drawn in 2D canvas, ~600 lines of arithmetic
     Hero          headline, ticker, live finance facts
     ProtocolStrip five live numbers under the fold
+    ReserveCard   one asset's backing, compact on the landing, full in the app
+    LiquidityTable the pool table, trimmed on the landing, complete in the explorer
     TokenCard     $GRAV, read from the contract
+    app/          the shell primitives: rail, panels, callouts, status rows
     sections/     02–09 plus the closing call to action
   lib/
     chain         chain defs, viem clients, router/canonical token addresses
+    reserves      the Proof of Gravity engine
     liquidity     the pool scanner
-    assets        the asset + contract registry
-    useChainStatus block heads and token facts
+    swap          route discovery and quoting
+    history       wallet activity from transfer logs
+    contracts     the 15-slot contract registry
+    assets        the asset registry
+    deployPlan    the 14 steps that bring one asset up
 ```
 
 ### The hero
@@ -99,5 +134,6 @@ every label is mono, uppercase, wide-tracked.
 
 ## Not built
 
-The nav and footer link to `/app/*` and `/docs/*`, matching the reference. Those routes
-do not exist here — this is the landing page only.
+The pages are complete; the contracts behind them are not. Bridge, swap and deploy
+prepare and describe transactions but nothing can be signed until the addresses in
+`.env.local` point at real deployments — which is exactly how the original behaves.

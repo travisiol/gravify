@@ -48,12 +48,6 @@ export function addressExplorerUrl(address: string) {
   return `${chains.robinhood.explorer}/address/${address}`;
 }
 
-/**
- * Cross-chain messenger. Empty until a messenger is deployed and configured —
- * the bridge stays inert while this is unset.
- */
-export const MESSENGER = process.env.NEXT_PUBLIC_MESSENGER ?? "";
-
 /** Uniswap-V2 style router used to quote the swap leg and enumerate pools. */
 export const SWAP_ROUTER = (process.env.NEXT_PUBLIC_SWAP_ROUTER ??
   "0x89e5db8b5aa49aa85ac63f691524311aeb649eba") as `0x${string}`;

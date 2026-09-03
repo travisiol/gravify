@@ -1,7 +1,8 @@
 import { Button } from "../ui/Button";
+import { truncate } from "@/lib/format";
 import { SectionHeader } from "../ui/Marks";
 import { Reveal } from "../ui/Reveal";
-import { contractRegistry, registryConfigured, registryTotal } from "@/lib/assets";
+import { contractRegistry, registryConfigured, registryTotal } from "@/lib/contracts";
 
 const snippet = `// Verify a reserve yourself — same reads the interface performs
 const collateral = await eth.readContract({
@@ -37,14 +38,14 @@ export function Integrators() {
                 </span>
               </div>
               <ul className="mt-4 divide-y divide-line">
-                {contractRegistry.map((entry, i) => (
+                {contractRegistry.slice(0, 6).map((entry, i) => (
                   <li
                     key={`${entry.name}-${i}`}
                     className="flex items-center justify-between py-2.5 text-sm"
                   >
                     <span className="text-ink">{entry.name}</span>
                     <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-muted">
-                      {entry.address || "Not deployed"}
+                      {entry.address ? truncate(entry.address) : "Not deployed"}
                     </span>
                   </li>
                 ))}
